@@ -8,13 +8,20 @@ export default class Enemy {
         this.markedForDeletion = false
         this.color = color
         this.type = 'enemy'
+        this.lives = 1
     }
 
     update() {
         this.y += this.speedY
         this.x += this.speedX
+
+        //Conditions for removal
         if (this.x < 0 || this.x > this.game.width) this.markedForDeletion = true
         if (this.y < 0 || this.y > this.game.height) this.markedForDeletion = true
+        if (this.lives <= 0) {
+            this.markedForDeletion = true
+            console.log('Man Im Dead')
+        }
     }
 
     draw(context) {

@@ -14,12 +14,7 @@ export default class Player {
         this.speedY = 0
         this.maxSpeed = 6
 
-        this.maxAmmo = 20
-        this.ammo = 20
-        this.ammoTimer = 0
-        this.ammoInterval = 500
-
-        this.lives = 10
+        this.lives = 3
     }
 
     update(deltaTime) {
@@ -52,13 +47,6 @@ export default class Player {
         this.y += this.speedY
         this.x += this.speedX
 
-        if (this.ammoTimer > this.ammoInterval && this.ammo < this.maxAmmo) {
-            this.ammoTimer = 0
-            this.ammo++
-        } else {
-            this.ammoTimer += deltaTime
-        }
-
         // projectiles
         this.projectiles.forEach((projectile) => {
             projectile.update(deltaTime)
@@ -76,8 +64,8 @@ export default class Player {
             context.strokeRect(this.x, this.y, this.width, this.height)
             context.lineWidth = 1
             context.beginPath()
-            const dx = this.game.input.mouseX - (this.x + this.width / 2)
-            const dy = this.game.input.mouseY - (this.y + this.height / 2)
+            const dx = this.game.inputs.mouseX - (this.x + this.width / 2)
+            const dy = this.game.inputs.mouseY - (this.y + this.height / 2)
             const maxLength = 60
             const angle = Math.atan2(dy, dx)
             const x = this.x + this.width / 2 + maxLength * Math.cos(angle)
@@ -99,18 +87,13 @@ export default class Player {
             mouseX - (this.x + this.width / 2)
         )
 
-        if (this.ammo > 0) {
-            this.ammo--
-            this.projectiles.push(
-                new Projectile(
-                    this.game,
-                    this.x + this.width / 2,
-                    this.y + this.height / 2,
-                    angle
-                )
+        this.projectiles.push(
+            new Projectile(
+                this.game,
+                this.x + this.width / 2,
+                this.y + this.height / 2,
+                angle
             )
-        } else {
-            console.log('out of ammo')
-        }
+        )
     }
 }
