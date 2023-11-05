@@ -14,12 +14,14 @@ export default class Game {
     this.gameOver = false
     this.debug = false
     this.gameTime = 0
-    
+    this.points = 0
+
     //Enemies + spawn
     this.enemies = []
     this.enemyTimer = 0
     this.enemyInterval = 1000
-    this.gameRound = 1
+    this.gameRound = 0
+    this.enemiesPerWave = this.gameOver*2
 
     this.player = new Player(this)
   }
@@ -30,7 +32,24 @@ export default class Game {
       this.player.update(deltaTime)
       this.inputs.update(deltaTime)
 
-      //Spawn
+      //Oob check
+      if (this.player.x < 0) {
+        this.player.x = 0;
+      }
+      if (this.player.x + this.player.width > this.width) {
+        this.player.x = this.width - this.player.width;
+      }
+      if (this.player.y < 0) {
+        this.player.y = 0;
+      }
+      if (this.player.y + this.player.height > this.height) {
+        this.player.y = this.height - this.player.height;
+      }
+
+
+
+
+      //Spawn things
       if (this.enemyTimer > this.enemyInterval) {
         let x = Math.random() < 0.5 ? 0 : this.width // spawn on left or right edge
         let y = Math.random() < 0.5 ? 0 : this.height // spawn on top or bottom edge
@@ -43,14 +62,12 @@ export default class Game {
         } else {
           x = Math.random() * this.width // if on bottom edge, randomize x position
         }
-        if (Math.random() < 0.2) {
-          this.enemies.push(new Candy(this, x, y))
-        } else {
-          this.enemies.push(new Pumpkin(this, x, y))
-        }
+        this.enemies.push(new Pumpkin(this, x, y))
+
         this.enemyTimer = 0
       } else {
         this.enemyTimer += deltaTime
+
       }
       this.player.update(deltaTime)
 
@@ -64,11 +81,13 @@ export default class Game {
             this.player.ammo += 5
           }
         }
+
         this.player.projectiles.forEach((projectile) => {
           if (this.checkCollision(projectile, enemy)) {
             if (enemy.lives > 1) {
               enemy.lives -= projectile.damage
             } else {
+              this.points += enemy.worth
               enemy.markedForDeletion = true
             }
             projectile.markedForDeletion = true
@@ -78,9 +97,9 @@ export default class Game {
       this.enemies = this.enemies.filter((enemy) => !enemy.markedForDeletion)
     }
     else {
-
     }
   }
+
 
   draw(context) {
     this.player.draw(context)
@@ -107,4 +126,10 @@ export default class Game {
       object1.height + object1.y > object2.y
     )
   }
+
+  startWave() {
+    this.gameRound++
+    this.enemiesSpawnedInWave = 0
+    this.enemyTimer = 0
+}
 }

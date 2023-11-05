@@ -21,7 +21,6 @@ export default class Enemy {
         if (this.y < 0 || this.y > this.game.height) this.markedForDeletion = true
         if (this.lives <= 0) {
             this.markedForDeletion = true
-            console.log('Man Im Dead')
         }
     }
 

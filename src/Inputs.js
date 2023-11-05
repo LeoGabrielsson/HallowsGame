@@ -39,7 +39,6 @@ export default class InputHandler {
 
         window.addEventListener('mousedown', (event) => {
             this.mouseDown = true
-            console.log('Pew')
         })
         window.addEventListener('mouseup', (event) => {
             this.mouseDown = false
@@ -52,8 +51,6 @@ export default class InputHandler {
         while (this.shootTimer <= 0 && this.mouseDown == true) {
             this.game.player.shoot(this.mouseX, this.mouseY)
             this.shootTimer = 200
-            console.log('Fire')
-            console.log(this.mouseX, this.mouseY)
         }
 
     }
