@@ -9,6 +9,7 @@ export default class Enemy {
         this.color = color
         this.type = 'enemy'
         this.lives = 1
+        this.damage = 0
     }
 
     update() {

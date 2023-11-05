@@ -11,14 +11,15 @@ export default class Game {
     this.inputs = new Inputs(this)
     this.ui = new UserInterface(this)
     this.keys = []
-    this.enemies = []
     this.gameOver = false
-    this.gravity = 1
     this.debug = false
     this.gameTime = 0
+    
+    //Enemies + spawn
     this.enemies = []
     this.enemyTimer = 0
     this.enemyInterval = 1000
+    this.gameRound = 1
 
     this.player = new Player(this)
   }
@@ -29,6 +30,7 @@ export default class Game {
       this.player.update(deltaTime)
       this.inputs.update(deltaTime)
 
+      //Spawn
       if (this.enemyTimer > this.enemyInterval) {
         let x = Math.random() < 0.5 ? 0 : this.width // spawn on left or right edge
         let y = Math.random() < 0.5 ? 0 : this.height // spawn on top or bottom edge
@@ -52,10 +54,11 @@ export default class Game {
       }
       this.player.update(deltaTime)
 
+      //Collision
       this.enemies.forEach((enemy) => {
         enemy.update(this.player)
         if (this.checkCollision(this.player, enemy)) {
-          this.player.lives--
+          this.player.lives -= enemy.damage
           enemy.markedForDeletion = true
           if (enemy.type === 'candy') {
             this.player.ammo += 5
@@ -95,6 +98,7 @@ export default class Game {
     })
   }
 
+  //Collision rules setup
   checkCollision(object1, object2) {
     return (
       object1.x < object2.x + object2.width &&

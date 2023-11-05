@@ -9,6 +9,7 @@ export default class Pumpkin extends Enemy {
         this.y = y
         this.speed = 2
         this.lives = 2
+        this.damage = 1
         this.color = 'orange'
     }
 
