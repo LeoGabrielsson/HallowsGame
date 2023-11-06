@@ -20,12 +20,12 @@ export default class InputHandler {
             ) {
                 this.game.keys.push(event.key)
             }
-            
+
             if (event.key === 'b') {
                 this.game.debug = !this.game.debug
             }
             //Super gun
-            if (this.game.player.superAmmo > 0 && event.key === 'f'){
+            if (this.game.player.superAmmo > 0 && event.key === 'f') {
                 this.game.player.super(this.mouseX, this.mouseY)
                 this.game.player.superAmmo -= 1
             }
@@ -36,7 +36,7 @@ export default class InputHandler {
                 this.game.keys.splice(this.game.keys.indexOf(event.key), 1)
             }
         })
-        
+
         //Mouse
         window.addEventListener('mousemove', (event) => {
             this.mouseX = event.clientX - this.game.canvasPosition.left
@@ -48,7 +48,7 @@ export default class InputHandler {
         window.addEventListener('mouseup', (event) => {
             this.mouseDown = false
         })
-        
+
     }
     update(deltaTime) {
         if (this.shootTimer > 0) {

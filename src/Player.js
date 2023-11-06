@@ -23,9 +23,9 @@ export default class Player {
 
     update(deltaTime) {
         if (this.lives <= 0) {
-            this.game.score += (this.superAmmo*50)
-            this.game.score += (this.game.things.length*250)
-            console.log(this.game.score)
+            this.game.score += (this.superAmmo * 50)
+            this.game.score += (this.game.things.length * 250)
+            this.superAmmo = 0
             this.game.gameOver = true
         }
 
