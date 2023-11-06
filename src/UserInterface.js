@@ -24,6 +24,49 @@ export default class UserInterface {
         context.fillText(`Round: ${this.game.gameRound}`, 1125, 60)
         context.fillText(`Enemies Left: ${this.game.enemies.length}`, 1050, 90)
 
+        if (!this.game.gameStarted) {
+            context.fillStyle = "#5A5A5A"
+            context.fillRect(this.game.width / 2 - 600, this.game.height / 2 - 300, 1200, 600)
+            context.fillStyle = "white"
+            context.shadowColor = 'black'
+            context.fillText(
+                `Ghoul Hunter`,
+                this.game.width / 2 - 80,
+                this.game.height / 2 - 250,
+            )
+            context.fillText(
+                `W A S D keys control your character`,
+                this.game.width / 2 - 570,
+                this.game.height / 4 ,
+            )
+            context.fillText(
+                `Use your mouse to aim and fire normal rounds`,
+                this.game.width / 2 - 570,
+                this.game.height / 2 - 130,
+            )
+            context.fillText(
+                `Use F to fire a faster and higher damage round. This costs "Special Ammo"`,
+                this.game.width / 2 - 570,
+                this.game.height / 2 - 80,
+            )
+            context.fillText(
+                `These boxes grand you one round of Special Ammo =>`,
+                this.game.width / 2 - 570,
+                this.game.height / 2 + 80,
+            )
+            context.fillStyle = "#ffff00"
+            context.fillRect(this.game.width / 2 + 50, this.game.height / 2 + 56, 32, 32)
+            
+            context.fillStyle = "white"
+            context.fillText(
+                `Press E to start`,
+                this.game.width / 2 + 420,
+                this.game.height / 2 + 280,
+            )
+        }
+      
+
+
         if (this.game.gameOver) {
             context.textAlign = 'center'
             context.font = `50px ${this.fontFamily}`

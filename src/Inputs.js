@@ -20,7 +20,12 @@ export default class InputHandler {
             ) {
                 this.game.keys.push(event.key)
             }
+            //Game Start
+            if (event.key === 'e') {
+                this.game.gameStarted = true
+              }
 
+            //Debug
             if (event.key === 'b') {
                 this.game.debug = !this.game.debug
             }

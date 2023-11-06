@@ -16,6 +16,7 @@ export default class Game {
     this.ui = new UserInterface(this)
     this.keys = []
     this.gameOver = false
+    this.gameStarted = false
     this.debug = false
     this.gameTime = 0
     this.score = 0
@@ -37,125 +38,126 @@ export default class Game {
   }
 
   update(deltaTime) {
-    if (!this.gameOver) {
-      this.gameTime += deltaTime
-      this.player.update(deltaTime)
-      this.inputs.update(deltaTime)
-      this.enemiesPerWave = this.gameRound ** 2
 
-      //Oob check
-      if (this.player.x < 0) {
-        this.player.x = 0;
-      }
-      if (this.player.x + this.player.width > this.width) {
-        this.player.x = this.width - this.player.width;
-      }
-      if (this.player.y < 0) {
-        this.player.y = 0;
-      }
-      if (this.player.y + this.player.height > this.height) {
-        this.player.y = this.height - this.player.height;
-      }
+    if (this.gameOver || !this.gameStarted) {
+      return
+     }
 
-      //Wave managment
-      if (this.enemiesSpawned < this.enemiesPerWave) {
-        if (this.enemyTimer > this.enemyInterval) {
-          while (this.enemiesSpawned < this.enemiesPerWave) {
-            let x = Math.random() < 0.5 ? 0 : this.width + 0.2;
-            let y = Math.random() < 0.5 ? 0 : this.height + 0.2;
-            if (x === 0) {
-              y = Math.random() * this.height;
-            } else if (x === this.width) {
-              y = Math.random() * this.height;
-            } else if (y === 0) {
-              x = Math.random() * this.width;
-            } else {
-              y = Math.random() * this.height;
-            }
-            this.enemies.push(new Pumpkin(this, x, y));
-            this.enemiesSpawned++;
-            console.log(this.enemiesPerWave)
+    this.gameTime += deltaTime
+    this.player.update(deltaTime)
+    this.inputs.update(deltaTime)
+    this.enemiesPerWave = this.gameRound ** 2
+
+    //Oob check
+    if (this.player.x < 0) {
+      this.player.x = 0;
+    }
+    if (this.player.x + this.player.width > this.width) {
+      this.player.x = this.width - this.player.width;
+    }
+    if (this.player.y < 0) {
+      this.player.y = 0;
+    }
+    if (this.player.y + this.player.height > this.height) {
+      this.player.y = this.height - this.player.height;
+    }
+
+    //Wave managment
+    if (this.enemiesSpawned < this.enemiesPerWave) {
+      if (this.enemyTimer > this.enemyInterval) {
+        while (this.enemiesSpawned < this.enemiesPerWave) {
+          let x = Math.random() < 0.5 ? 0 : this.width + 0.2;
+          let y = Math.random() < 0.5 ? 0 : this.height + 0.2;
+          if (x === 0) {
+            y = Math.random() * this.height;
+          } else if (x === this.width) {
+            y = Math.random() * this.height;
+          } else if (y === 0) {
+            x = Math.random() * this.width;
+          } else {
+            y = Math.random() * this.height;
           }
-          this.enemyTimer = 0;
-          //Boss spawns
-          if (this.gameRound % 5 == 0) {
-            let x = Math.random() < 0.5 ? 0 : this.width + 0.2;
-            let y = Math.random() < 0.5 ? 0 : this.height + 0.2;
-            this.enemies.push(new Boss(this, x, y));
-          }
-          if (this.gameRound % 3 == 0) {
-            while (this.miniBossAmount < this.gameRound / 3) {
-              let x = Math.random() < 0.5 ? 0 : this.width + 0.2;
-              let y = Math.random() < 0.5 ? 0 : this.height + 0.2;
-              this.enemies.push(new MiniBoss(this, x, y));
-              this.miniBossAmount++
-              console.log('Added' + this.miniBossAmount)
-            }
-            this.miniBossAmount = 0
-          }
-        } else {
-          this.enemyTimer += deltaTime;
+          this.enemies.push(new Pumpkin(this, x, y));
+          this.enemiesSpawned++;
+          console.log(this.enemiesPerWave)
         }
-
+        this.enemyTimer = 0;
+        //Boss spawns
+        if (this.gameRound % 5 == 0) {
+          let x = Math.random() < 0.5 ? 0 : this.width + 0.2;
+          let y = Math.random() < 0.5 ? 0 : this.height + 0.2;
+          this.enemies.push(new Boss(this, x, y));
+        }
+        if (this.gameRound % 3 == 0) {
+          while (this.miniBossAmount < this.gameRound / 3) {
+            let x = Math.random() < 0.5 ? 0 : this.width + 0.2;
+            let y = Math.random() < 0.5 ? 0 : this.height + 0.2;
+            this.enemies.push(new MiniBoss(this, x, y));
+            this.miniBossAmount++
+            console.log('Added' + this.miniBossAmount)
+          }
+          this.miniBossAmount = 0
+        }
       } else {
-        if (this.enemies.length === 0) {
-          this.startWave()
+        this.enemyTimer += deltaTime;
+      }
+
+    } else {
+      if (this.enemies.length === 0) {
+        this.startWave()
+      }
+    }
+
+    this.player.update(deltaTime)
+
+    //Collision
+    this.things.forEach((enemy) => {
+      enemy.update(this.player)
+      if (this.checkCollision(this.player, enemy)) {
+        this.player.lives -= enemy.damage
+        enemy.markedForDeletion = true
+      }
+
+      this.player.projectiles.forEach((projectile) => {
+        if (this.checkCollision(projectile, enemy)) {
+          enemy.markedForDeletion = true
+          projectile.markedForDeletion = true
+        }
+      })
+    })
+
+
+    this.enemies.forEach((enemy) => {
+      enemy.update(this.player)
+      if (this.checkCollision(this.player, enemy)) {
+        this.player.lives -= enemy.damage
+        enemy.markedForDeletion = true
+        if (enemy.type === 'candy') {
+          this.player.superAmmo += 1
         }
       }
 
-      this.player.update(deltaTime)
 
-      //Collision
-      this.things.forEach((enemy) => {
-        enemy.update(this.player)
-        if (this.checkCollision(this.player, enemy)) {
-          this.player.lives -= enemy.damage
-          enemy.markedForDeletion = true
-        }
-
-        this.player.projectiles.forEach((projectile) => {
-          if (this.checkCollision(projectile, enemy)) {
-            enemy.markedForDeletion = true
+      this.player.projectiles.forEach((projectile) => {
+        if (this.checkCollision(projectile, enemy)) {
+          if (enemy.type !== 'candy') {
+            enemy.lives -= projectile.damage
+            if (enemy.lives < 1) {
+              this.score += enemy.worth
+              enemy.markedForDeletion = true
+              if (enemy.type === 'boss') {
+                this.enemies.push(new Candy(this, enemy.x, enemy.y))
+              } else if (enemy.type === 'miniboss') {
+                this.things.push(new Mine(this, enemy.x, enemy.y))
+              }
+            }
             projectile.markedForDeletion = true
           }
-        })
-      })
-
-
-      this.enemies.forEach((enemy) => {
-        enemy.update(this.player)
-        if (this.checkCollision(this.player, enemy)) {
-          this.player.lives -= enemy.damage
-          enemy.markedForDeletion = true
-          if (enemy.type === 'candy') {
-            this.player.superAmmo += 1
-          }
         }
-
-
-        this.player.projectiles.forEach((projectile) => {
-          if (this.checkCollision(projectile, enemy)) {
-            if (enemy.type !== 'candy') {
-              enemy.lives -= projectile.damage
-              if (enemy.lives < 1) {
-                this.score += enemy.worth
-                enemy.markedForDeletion = true
-                if (enemy.type === 'boss') {
-                  this.enemies.push(new Candy(this, enemy.x, enemy.y))
-                } else if (enemy.type === 'miniboss') {
-                  this.things.push(new Mine(this, enemy.x, enemy.y))
-                }
-              }
-              projectile.markedForDeletion = true
-            }
-          }
-        })
       })
-      this.enemies = this.enemies.filter((enemy) => !enemy.markedForDeletion)
-      this.things = this.things.filter((enemy) => !enemy.markedForDeletion)
-    }
-    else {
-    }
+    })
+    this.enemies = this.enemies.filter((enemy) => !enemy.markedForDeletion)
+    this.things = this.things.filter((enemy) => !enemy.markedForDeletion)
   }
 
   draw(context) {
