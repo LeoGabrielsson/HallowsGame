@@ -7,9 +7,8 @@ export default class Candy extends Enemy {
         this.height = 32
         this.x = x
         this.y = y
-        this.speed = 0
         this.lives = 1
-        this.color = '#0f0'
+        this.color = '#ffff00'
         this.type = 'candy'
     }
 }

@@ -1,19 +1,18 @@
 import Enemy from './Enemy.js'
 
-export default class Pumpkin extends Enemy {
+export default class Boss extends Enemy {
     constructor(game, x, y) {
         super(game)
-        this.width = 32
-        this.height = 32
+        this.width = 50
+        this.height = 50
         this.x = x
         this.y = y
-
         this.speed = 2
-        this.lives = 1
-        this.damage = 1
-        this.worth = 5
-        
-        this.color = '#1f5429'
+        this.lives = 10
+        this.damage = 2
+        this.worth = 50
+        this.color = '#1a3b27'
+        this.type = 'boss'
     }
 
     update(player) {

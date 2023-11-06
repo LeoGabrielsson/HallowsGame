@@ -10,6 +10,7 @@ export default class Enemy {
         this.type = 'enemy'
         this.lives = 1
         this.damage = 0
+        this.worth = 0
     }
 
     update() {
@@ -19,9 +20,6 @@ export default class Enemy {
         //Conditions for removal
         if (this.x < 0 || this.x > this.game.width) this.markedForDeletion = true
         if (this.y < 0 || this.y > this.game.height) this.markedForDeletion = true
-        if (this.lives <= 0) {
-            this.markedForDeletion = true
-        }
     }
 
     draw(context) {

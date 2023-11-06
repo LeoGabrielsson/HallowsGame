@@ -1,4 +1,4 @@
-export default class UserInterface {
+export default class UserInterface {gameRound
     constructor(game) {
         this.game = game
         this.fontSize = 25
@@ -16,8 +16,11 @@ export default class UserInterface {
         context.textAlign = 'left'
         context.font = `${this.fontSize}px ${this.fontFamily}`
         context.fillText(`Lives: ${this.game.player.lives}`, 20, 30)
-        context.fillText(`Points: ${this.game.points}`, 20, 60)
-        context.fillText(`Time: ${(this.game.gameTime * 0.001).toFixed(1)}`, 20, 90)
+        context.fillText(`Special Ammo: ${this.game.player.superAmmo}`, 20, 60)
+        context.fillText(`Use with "F"`, 20, 90)
+        context.fillText(`Score: ${this.game.score}`, 20, 120)
+        context.fillText(`Time: ${(this.game.gameTime * 0.001).toFixed(1)}`, 1125, 30)
+        context.fillText(`Round: ${this.game.gameRound}`, 1125, 60)
 
         if (this.game.gameOver) {
             context.textAlign = 'center'

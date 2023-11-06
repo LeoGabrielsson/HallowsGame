@@ -1,10 +1,11 @@
 import Projectile from './Projectile.js'
+import Super from './Super.js'
 
 export default class Player {
     constructor(game) {
         this.game = game
-        this.width = 32
-        this.height = 64
+        this.width = 30
+        this.height = 60
         this.x = this.game.width / 2 - this.width / 2
         this.y = this.game.height / 2 - this.height / 2
 
@@ -12,13 +13,19 @@ export default class Player {
 
         this.speedX = 0
         this.speedY = 0
-        this.maxSpeed = 2
+        this.maxSpeed = 1.5
 
         this.lives = 3
+        this.superAmmo = 1
+
+        this.color = '#0d407f'
     }
 
     update(deltaTime) {
         if (this.lives <= 0) {
+            this.game.score += (this.superAmmo*50)
+            this.game.score += (this.game.things.length*250)
+            console.log(this.game.score)
             this.game.gameOver = true
         }
 
@@ -47,7 +54,7 @@ export default class Player {
         this.y += this.speedY
         this.x += this.speedX
 
-        // projectiles
+        //Projectiles
         this.projectiles.forEach((projectile) => {
             projectile.update(deltaTime)
         })
@@ -57,7 +64,7 @@ export default class Player {
     }
 
     draw(context) {
-        context.fillStyle = '#f00'
+        context.fillStyle = this.color
         context.fillRect(this.x, this.y, this.width, this.height)
         if (this.game.debug) {
             context.strokeStyle = '#000'
@@ -81,7 +88,6 @@ export default class Player {
     }
 
     shoot(mouseX, mouseY) {
-        // get angle between player and mouse
         const angle = Math.atan2(
             mouseY - (this.y + this.height / 2),
             mouseX - (this.x + this.width / 2)
@@ -89,6 +95,22 @@ export default class Player {
 
         this.projectiles.push(
             new Projectile(
+                this.game,
+                this.x + this.width / 2,
+                this.y + this.height / 2,
+                angle
+            )
+        )
+    }
+
+    super(mouseX, mouseY) {
+        const angle = Math.atan2(
+            mouseY - (this.y + this.height / 2),
+            mouseX - (this.x + this.width / 2)
+        )
+
+        this.projectiles.push(
+            new Super(
                 this.game,
                 this.x + this.width / 2,
                 this.y + this.height / 2,
