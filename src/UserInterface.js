@@ -1,4 +1,5 @@
-export default class UserInterface {gameRound
+export default class UserInterface {
+    gameRound
     constructor(game) {
         this.game = game
         this.fontSize = 25
@@ -21,6 +22,7 @@ export default class UserInterface {gameRound
         context.fillText(`Score: ${this.game.score}`, 20, 120)
         context.fillText(`Time: ${(this.game.gameTime * 0.001).toFixed(1)}`, 1125, 30)
         context.fillText(`Round: ${this.game.gameRound}`, 1125, 60)
+        context.fillText(`Enemies Left: ${this.game.enemies.length}`, 1050, 90)
 
         if (this.game.gameOver) {
             context.textAlign = 'center'

@@ -26,8 +26,12 @@ export default class Game {
     this.enemyTimer = 0
     this.enemyInterval = 1000
     this.gameRound = 1
-    this.enemiesPerWave = this.gameRound * 2
+    this.enemiesPerWave = this.gameRound ** 2
     this.enemiesSpawned = 0
+    this.bossAmount = 0
+    this.bossNumb = 1
+    this.miniBossAmount = 0
+    this.miniBossNumb = 1
 
     this.player = new Player(this)
   }
@@ -37,7 +41,7 @@ export default class Game {
       this.gameTime += deltaTime
       this.player.update(deltaTime)
       this.inputs.update(deltaTime)
-      this.enemiesPerWave = this.gameRound * 2
+      this.enemiesPerWave = this.gameRound ** 2
 
       //Oob check
       if (this.player.x < 0) {
@@ -70,6 +74,7 @@ export default class Game {
             }
             this.enemies.push(new Pumpkin(this, x, y));
             this.enemiesSpawned++;
+            console.log(this.enemiesPerWave)
           }
           this.enemyTimer = 0;
           //Boss spawns
@@ -77,10 +82,16 @@ export default class Game {
             let x = Math.random() < 0.5 ? 0 : this.width + 0.2;
             let y = Math.random() < 0.5 ? 0 : this.height + 0.2;
             this.enemies.push(new Boss(this, x, y));
-          } else if (this.gameRound % 3 == 0) {
-            let x = Math.random() < 0.5 ? 0 : this.width + 0.2;
-            let y = Math.random() < 0.5 ? 0 : this.height + 0.2;
-            this.enemies.push(new MiniBoss(this, x, y));
+          }
+          if (this.gameRound % 3 == 0) {
+            while (this.miniBossAmount < this.gameRound / 3) {
+              let x = Math.random() < 0.5 ? 0 : this.width + 0.2;
+              let y = Math.random() < 0.5 ? 0 : this.height + 0.2;
+              this.enemies.push(new MiniBoss(this, x, y));
+              this.miniBossAmount++
+              console.log('Added' + this.miniBossAmount)
+            }
+            this.miniBossAmount = 0
           }
         } else {
           this.enemyTimer += deltaTime;
@@ -148,7 +159,6 @@ export default class Game {
   }
 
   draw(context) {
-    this.ui.draw(context)
     this.player.draw(context)
     this.enemies.forEach((enemy) => {
       enemy.draw(context)
@@ -156,6 +166,7 @@ export default class Game {
     this.things.forEach((enemy) => {
       enemy.draw(context)
     })
+    this.ui.draw(context)
   }
 
   //Collision rules setup
@@ -170,6 +181,7 @@ export default class Game {
 
   startWave() {
     this.gameRound++
+    this.miniBossAmount = 0
     this.enemiesSpawned = 0
     this.enemyTimer = 0
   }

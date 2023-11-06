@@ -18,8 +18,8 @@ export default class Enemy {
         this.x += this.speedX
 
         //Conditions for removal
-        if (this.x < 0 || this.x > this.game.width) this.markedForDeletion = true
-        if (this.y < 0 || this.y > this.game.height) this.markedForDeletion = true
+        // if (this.x < 0 || this.x > this.game.width) this.markedForDeletion = true
+        // if (this.y < 0 || this.y > this.game.height) this.markedForDeletion = true
     }
 
     draw(context) {
