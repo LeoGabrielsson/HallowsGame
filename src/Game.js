@@ -26,7 +26,7 @@ export default class Game {
     this.things = []
     this.enemyInterval = 500
     this.enemyTimer = this.enemyInterval
-    this.gameRound = 5
+    this.gameRound = 1
     this.enemiesPerWave = this.gameRound ** 2
     this.enemiesSpawned = 0
     this.bossAmount = 0
