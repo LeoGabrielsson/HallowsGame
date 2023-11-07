@@ -30,14 +30,14 @@ export default class UserInterface {
             context.fillStyle = "white"
             context.shadowColor = 'black'
             context.fillText(
-                `Ghoul Hunter`,
-                this.game.width / 2 - 80,
+                `Ghoul Hunter Open Alpha`,
+                this.game.width / 2 - 150,
                 this.game.height / 2 - 250,
             )
             context.fillText(
                 `W A S D keys control your character`,
                 this.game.width / 2 - 570,
-                this.game.height / 4 ,
+                this.game.height / 4,
             )
             context.fillText(
                 `Use your mouse to aim and fire normal rounds`,
@@ -56,7 +56,7 @@ export default class UserInterface {
             )
             context.fillStyle = "#ffff00"
             context.fillRect(this.game.width / 2 + 50, this.game.height / 2 + 56, 32, 32)
-            
+
             context.fillStyle = "white"
             context.fillText(
                 `Press E to start`,
@@ -64,7 +64,7 @@ export default class UserInterface {
                 this.game.height / 2 + 280,
             )
         }
-      
+
 
 
         if (this.game.gameOver) {
