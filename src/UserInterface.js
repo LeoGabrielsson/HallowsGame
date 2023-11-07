@@ -54,6 +54,11 @@ export default class UserInterface {
                 this.game.width / 2 - 570,
                 this.game.height / 2 + 80,
             )
+            context.fillText(
+                `Everything else will try to kill you`,
+                this.game.width / 2 - 570,
+                this.game.height / 2 + 130,
+            )
             context.fillStyle = "#ffff00"
             context.fillRect(this.game.width / 2 + 50, this.game.height / 2 + 56, 32, 32)
 
