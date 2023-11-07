@@ -16,7 +16,7 @@ export default class Player {
         this.maxSpeed = 1.5
 
         this.lives = 3
-        this.superAmmo = 1
+        this.superAmmo = 0
 
         this.color = '#0d407f'
     }

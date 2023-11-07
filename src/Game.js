@@ -24,15 +24,13 @@ export default class Game {
     //Enemies + spawn
     this.enemies = []
     this.things = []
-    this.enemyTimer = 0
-    this.enemyInterval = 1000
-    this.gameRound = 1
+    this.enemyInterval = 500
+    this.enemyTimer = this.enemyInterval
+    this.gameRound = 5
     this.enemiesPerWave = this.gameRound ** 2
     this.enemiesSpawned = 0
     this.bossAmount = 0
-    this.bossNumb = 1
     this.miniBossAmount = 0
-    this.miniBossNumb = 1
 
     this.player = new Player(this)
   }
@@ -41,7 +39,7 @@ export default class Game {
 
     if (this.gameOver || !this.gameStarted) {
       return
-     }
+    }
 
     this.gameTime += deltaTime
     this.player.update(deltaTime)
@@ -65,41 +63,43 @@ export default class Game {
     //Wave managment
     if (this.enemiesSpawned < this.enemiesPerWave) {
       if (this.enemyTimer > this.enemyInterval) {
-        while (this.enemiesSpawned < this.enemiesPerWave) {
-          let x = Math.random() < 0.5 ? 0 : this.width + 0.2;
-          let y = Math.random() < 0.5 ? 0 : this.height + 0.2;
-          if (x === 0) {
-            y = Math.random() * this.height;
-          } else if (x === this.width) {
-            y = Math.random() * this.height;
-          } else if (y === 0) {
-            x = Math.random() * this.width;
-          } else {
-            y = Math.random() * this.height;
-          }
-          this.enemies.push(new Pumpkin(this, x, y));
-          this.enemiesSpawned++;
-          console.log(this.enemiesPerWave)
+
+        let x = Math.random() < 0.5 ? 0 : this.width + 0.2
+        let y = Math.random() < 0.5 ? 0 : this.height + 0.2
+        if (x === 0) {
+          y = Math.random() * this.height
+        } else if (x === this.width) {
+          y = Math.random() * this.height
+        } else if (y === 0) {
+          x = Math.random() * this.width
+        } else {
+          y = Math.random() * this.height
         }
-        this.enemyTimer = 0;
+        this.enemies.push(new Pumpkin(this, x, y))
+        this.enemiesSpawned++;
+        this.enemyTimer = 0
         //Boss spawns
         if (this.gameRound % 5 == 0) {
-          let x = Math.random() < 0.5 ? 0 : this.width + 0.2;
-          let y = Math.random() < 0.5 ? 0 : this.height + 0.2;
-          this.enemies.push(new Boss(this, x, y));
+          while (this.bossAmount < this.gameRound / 5) {
+            let x = Math.random() < 0.5 ? 0 : this.width + 0.2
+            let y = Math.random() < 0.5 ? 0 : this.height + 0.2
+            this.enemies.push(new Boss(this, x, y))
+            this.bossAmount++
+          }
         }
+
         if (this.gameRound % 3 == 0) {
           while (this.miniBossAmount < this.gameRound / 3) {
-            let x = Math.random() < 0.5 ? 0 : this.width + 0.2;
-            let y = Math.random() < 0.5 ? 0 : this.height + 0.2;
-            this.enemies.push(new MiniBoss(this, x, y));
+            let x = Math.random() < 0.5 ? 0 : this.width + 0.2
+            let y = Math.random() < 0.5 ? 0 : this.height + 0.2
+            this.enemies.push(new MiniBoss(this, x, y))
             this.miniBossAmount++
-            console.log('Added' + this.miniBossAmount)
           }
-          this.miniBossAmount = 0
         }
+
+
       } else {
-        this.enemyTimer += deltaTime;
+        this.enemyTimer += deltaTime
       }
 
     } else {
@@ -183,8 +183,9 @@ export default class Game {
 
   startWave() {
     this.gameRound++
+    this.bossAmount = 0
     this.miniBossAmount = 0
     this.enemiesSpawned = 0
-    this.enemyTimer = 0
+    this.enemyTimer = this.enemyInterval
   }
 }
